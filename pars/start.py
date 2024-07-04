@@ -32,7 +32,10 @@ def go(text: str, salary: str = None):
                         "experience": alc.experience,
                         "schedule": alc.schedule,
                         "skills": alc.skills,
-                        "adres": alc.adres
+                        "adres": alc.adres,
+                        "rating": alc.rating,
+                        "company": alc.company,
+                        "link": alc.link
 
                     }
                 )
@@ -63,7 +66,7 @@ def link(text: str, salary: str = None):
             for b in [d.find("a") for d in soup.find_all("span", class_="serp-item__title-link-wrapper")]:
                 if "vacancy" in f"{b.attrs['href'].split('?')[0]}":
                     linkis.append(f"{b.attrs['href'].split('?')[0]}")
-                if len(linkis)>=15:
+                if len(linkis)>=4:
                     return linkis
         except Exception as e:
             print(f"{e}")
@@ -107,31 +110,33 @@ def resume(text):
         skills = [skill.find("div", recursive=False).find("div").text for skill in soup.find_all("li", attrs={"data-qa": "skills-element"})]
         if not skills:
             skills = "Error"
-            vacancies.skills = skills
         else:
             skills = ", ".join(skills)
-            vacancies.skills = skills
+        vacancies.skills = skills
         try:
             region = soup.find(attrs={"data-qa": "vacancy-view-location"}).text
             if region !="":
                 vacancies.adres = region
         except:
-            adres = soup.find(attrs={"data-qa": "vacancy-view-raw-address"}).text
+            adres = soup.find(attrs={"data-qa": "vacancy-view-raw-address"}).text.split(",")[0]
             if adres !="":
                 vacancies.adres = adres
+        try:
+            rating=soup.find(attrs={"data-qa": "employer-review-small-widget-total-rating"}).text
+        except:
+            rating="Не найдено"
+        vacancies.rating = rating
+        try:
+            company=soup.find(attrs={"data-qa": "bloko-header-2"}).text
+        except:
+            company="Не найдено"
+        vacancies.company = company
+
+        link=text
+        vacancies.link = link
         session.add(vacancies)
         session.commit()
 
-        """vacan={
-            "dolsh": name,
-            "salary": salary,
-            "experience": experience,
-            "schedule": schedule,
-            "skills": skills,
-            "region": region,
-            "adres": adres
-        }
-    return vacan"""
 
 def for_filters(search: str, colum: str):
     with session_creation() as session:

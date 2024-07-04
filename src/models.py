@@ -11,5 +11,6 @@ class Vacanci(Base):
     schedule: Mapped[str]
     skills: Mapped[str]
     adres: Mapped[str]
-
-
+    rating: Mapped[str]
+    company: Mapped[str]
+    link: Mapped[str]
