@@ -1,4 +1,112 @@
 body{
-    margin:0;
-    background: cyan;
+    margin: 0;
+    font-family: Courier New;
+    min-height: 100vh;
+    background: radial-gradient(circle, rgba(174,97,56,1) 0%, rgba(178,185,74,1) 28%, rgba(233,201,151,1) 55%, rgba(149,118,73,1) 70%, rgba(63,32,23,1) 100%);
+}
+
+.open{
+    position: absolute;
+    right: -9vh;
+    width: 0;
+    height: 18vh;
+    background: transparent;
+    border: 0px;
+    border-radius: 0 3vh 0 0;
+    padding: 0;
+    border-left: 9vh solid #ad613bde;
+    border-bottom: 9vh solid transparent;
+}
+
+#filters{
+    width: 0vw;
+    transition: 1.3s;
+    height: 70vh;
+    background: #ad613bde;
+    position: relative;
+    border-radius: 0px 0px 49px 0px;
+}
+.right_panel{
+    position: absolute;
+    width: auto;
+    top: 12vh;
+}
+svg.filt {
+    width: 6vh;
+    position: absolute;
+    left: -8vh;
+    top: 2vh;
+}
+header {
+    height: 8vh;
+    text-align: center;
+    padding-top: 2vh;
+    font-size: 90px;
+    font-weight: 700;
+}
+
+.head {
+    background: #94754a75;
+    border-radius: 3vh;
+    padding: 0 2vw;
+    color: #e8c896;
+}
+
+.list {
+    margin: 10vh;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: auto;
+    gap: 10vh;
+}
+
+.card {
+    height: 70vh;
+    background: #94754adb;
+    border-radius: 5vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border: 1vw solid #41251d;
+    color: #e8c895;
+    font-size: 32px;
+    font-weight: 600;
+    max-width: 46vh;
+    padding: 1vh 2vh;
+}
+
+header.dolsh {padding: 0;text-align: left;}
+
+a {
+    text-decoration: none;
+    color: #e8c895;
+    font-size: 2vw;
+}
+
+.gps {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+svg {
+    width: 1.5em;
+}
+
+.city {
+    display: flex;
+    align-items: center;
+    /* font-size: 32px; */
+    /* font-weight: 600; */
+}
+
+.company {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-align: right;
+}
+.money {
+    text-align: center;
 }

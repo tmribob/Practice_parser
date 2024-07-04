@@ -21,7 +21,7 @@ label {
 }
 .telo {
     height: 50%;
-    width: 60%;
+    width: 40%;
     background: #ae6138b0;
     border-radius: 15px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -36,7 +36,7 @@ input {
     color: #e9c997;
     border-radius: 5px;
     height: 5vh;
-    font-size: 18px;
+    font-size: 30px;
     font-weight: 700;
     background: #3f2017;
     text-align: center;
@@ -46,7 +46,7 @@ input {
 }
 input.poisk {
     margin-top: 2vh;
-    width: 38vw;
+    width: 25vw;
 }
 
 .send {
@@ -59,7 +59,8 @@ button {
     width: 15vw;
     position: relative;
     height: 11vh;
-    font-size: 43px;
+    font-size: 50px;
+    font-weight: 850;
     color: #b2b94a;
     background: #ae6138;
     border: 6px solid #3f2017;
