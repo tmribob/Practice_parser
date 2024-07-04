@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:latest #образ с докер хаба, нужен чтобы докер создал базу данных посгрес в контейнере
+    container_name: practice
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: nbhvbn23
+      POSTGRES_DB: vacancieshh
+    volumes:
+      - ./data:/data
+    ports:
+      - 5432:5432

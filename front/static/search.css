@@ -1,0 +1,75 @@
+body{
+    margin: 0;
+    font-family: Courier New;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, rgba(174,97,56,1) 0%, rgba(178,185,74,1) 28%, rgba(233,201,151,1) 55%, rgba(149,118,73,1) 70%, rgba(63,32,23,1) 100%);
+}
+.head {
+    font-size: 60px;
+    font-weight: 700;
+    text-align: center;
+    color: #b2b94a;
+    margin-top: 2vh;
+}
+
+label {
+    margin: 0;
+}
+.telo {
+    height: 50%;
+    width: 60%;
+    background: #ae6138b0;
+    border-radius: 15px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    align-items: center;
+    justify-content: space-around;
+}
+
+input {
+    color: #e9c997;
+    border-radius: 5px;
+    height: 5vh;
+    font-size: 18px;
+    font-weight: 700;
+    background: #3f2017;
+    text-align: center;
+}
+::placeholder{
+    color: rgba(255, 255, 255, 0.5);
+}
+input.poisk {
+    margin-top: 2vh;
+    width: 38vw;
+}
+
+.send {
+    width: 15vw;
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    width: 15vw;
+    position: relative;
+    height: 11vh;
+    font-size: 43px;
+    color: #b2b94a;
+    background: #ae6138;
+    border: 6px solid #3f2017;
+    border-radius: 10px;
+    text-align: left;
+}
+svg {
+    width: 10vh;
+    height: 10vh;
+    position: absolute;
+    top: 0;
+    right: 5px;
+}
