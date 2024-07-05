@@ -45,4 +45,5 @@ def take(request: Request,
         server_response = requests.get("http://127.0.0.1:7419/filtri_vacansi", params=params)
         global_answer = server_response
     data = global_answer.json()
+    print(adres, experience,schedule)
     return templates.TemplateResponse("vacancy.html", {"request": request, "data":data["elements"], "error": data["error"]})

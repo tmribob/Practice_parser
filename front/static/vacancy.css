@@ -25,6 +25,8 @@ body{
     background: #ad613bde;
     position: relative;
     border-radius: 0px 0px 49px 0px;
+    display: flex;
+    justify-content: center;
 }
 .right_panel{
     position: absolute;
@@ -109,4 +111,80 @@ svg {
 }
 .money {
     text-align: center;
+}
+
+.extra {
+    overflow: hidden;
+    white-space: inherit;
+    text-overflow: ellipsis;
+    height: 40%;
+    width: 100%;
+}
+#req{
+    display:none;
+    transition: 0.3s;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10%;
+    align-items: flex-end;
+}
+
+input[type="text"],select  {
+    width: 98%;
+    background: #94744b;
+    height: 4vh;
+    border: 1px solid #41251c;
+    border-radius: 5px;
+    color: #b2b84b;
+    font-size: 25px;
+}
+
+input[type="submit"] {
+    width: 80%;
+    background: #94744b;
+    height: 4vh;
+    border: 1px solid #41251c;
+    border-radius: 5px;
+    color: #b2b84b;
+    font-size: 25px;
+}
+
+select {
+    height: 5vh;
+    width: 100%;
+}
+
+.check {
+    width: 98%;
+    color: #e8c895;
+    font-size: 25px;
+}
+
+input[type="checkbox"] {
+    width: 2vh;
+    height: 2vh;
+}
+::placeholder{
+    color: #e8c895;;
+}
+
+.home {
+    position: absolute;
+    right: 0;
+    top: 2vh;
+    height: 10vh;
+    width: 10vh;
+    background: #ad613b;
+    border-radius: 3vh 0 0 3vh;
+}
+
+svg.back {
+    width: auto;
+}
+
+a.a_home {
+    width: 100%;
+    display: block;
+    height: 100%;
 }

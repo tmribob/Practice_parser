@@ -66,7 +66,7 @@ def link(text: str, salary: str = None):
             for b in [d.find("a") for d in soup.find_all("span", class_="serp-item__title-link-wrapper")]:
                 if "vacancy" in f"{b.attrs['href'].split('?')[0]}":
                     linkis.append(f"{b.attrs['href'].split('?')[0]}")
-                if len(linkis)>=4:
+                if len(linkis)>=12:
                     return linkis
         except Exception as e:
             print(f"{e}")
@@ -148,23 +148,20 @@ def for_filters(search: str, colum: str):
             value = session.query(Vacanci.id, Vacanci.schedule).all()
         idi = []
         for i in value:
-            if colum == "regadr":
-                if search in i[1] or search in i[2]:
-                    idi.append(i[0])
-            else:
-                if search in i[1]:
-                    idi.append(i[0])
+            if search in i[1]:
+                idi.append(i[0])
         return idi
 
 @app.get("/filtri_vacansi")
-def filters(regadr: str = None, experience: str = None, schedule: str = None):
+def filters(adres: str = None, experience: str = None, schedule: str = None):
+    print(adres, experience, schedule)
     correct_id = []
     correct_id1 = set()
-    answer = {"elements": []}
+    answer = {"elements": [], "error": "not_error"}
     count = 0
     with session_creation() as session:
-        if regadr:
-            norm_regadr_id = for_filters(regadr, "regadr")
+        if adres:
+            norm_regadr_id = for_filters(adres, "regadr")
             correct_id += norm_regadr_id
             count += 1
         if experience:
@@ -188,7 +185,11 @@ def filters(regadr: str = None, experience: str = None, schedule: str = None):
                         "experience": vac.experience,
                         "schedule": vac.schedule,
                         "skills": vac.skills,
-                        "adres": vac.adres
+                        "adres": vac.adres,
+                        "rating": vac.rating,
+                        "company": vac.company,
+                        "link": vac.link
+
                     }
                 )
         else:
@@ -201,9 +202,14 @@ def filters(regadr: str = None, experience: str = None, schedule: str = None):
                         "experience": vac.experience,
                         "schedule": vac.schedule,
                         "skills": vac.skills,
-                        "adres": vac.adres
+                        "adres": vac.adres,
+                        "rating": vac.rating,
+                        "company": vac.company,
+                        "link": vac.link
+
                     }
                 )
+    print(answer)
     return answer
 
 
