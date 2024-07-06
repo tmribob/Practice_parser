@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import time
 import fake_useragent
 from fastapi import FastAPI
 
@@ -19,8 +18,7 @@ def begin(search: str = None, salary: str = None):
     create_tables()
     try:
         for link in get_links(search, salary):
-            resume(link)
-            time.sleep(3)
+            get_vacancy(link)
         with session_creation() as session:
             vacancys_from_db = session.query(Vacanci).all()
             for one_vacancy_from_db in vacancys_from_db:
@@ -73,10 +71,9 @@ def get_links(search: str = None, salary: str = None):
                     return links
         except Exception as e:
             print(f"{e}")
-            time.sleep(1)
     else:
         return links
-def resume(link):
+def get_vacancy(link):
     data = requests.get(
         url=link,
         headers={"user-agent": ua.random}
@@ -144,57 +141,58 @@ def for_filters(search: str, colum: str):
 
             }
         value = session.query(Vacanci.id, mas[colum]).all()
-        idi = []
+        id_comform = []
         for i in value:
             if search in i[1]:
-                idi.append(i[0])
-        return idi
+                id_comform.append(i[0])
+        return id_comform
 
 @app.get("/filtri_vacansi")
 def filters(address: str = None, experience: str = None, schedule: str = None):
-    correct_id = []
+    id_filted = []
     correct_id1 = set()
-    answer = {"elements": [], "error": "not_error","city":[]}
+    db_filted = {"elements": [], "error": "not_error","city":[]}
     count = 0
     with session_creation() as session:
         if address:
-            norm_regadr_id = for_filters(address, "address")
-            correct_id += norm_regadr_id
-            count += 1
-        if experience:
-            norm_experience_id = for_filters(experience, "experience")
-            correct_id += norm_experience_id
+            id_conform = for_filters(address, "address")
+            id_filted += id_conform
             count += 1
         if schedule:
-            norm_schedule_id = for_filters(schedule, "schedule")
-            correct_id += norm_schedule_id
+            id_conform = for_filters(schedule, "schedule")
+            id_filted += id_conform
             count += 1
-        if count > 0:
-            for i in correct_id:
-                if correct_id.count(i) == count:
+        if experience:
+            id_conform = for_filters(experience, "experience")
+            id_filted += id_conform
+            count += 1
+
+        if count != 0:
+            for i in id_filted:
+                if id_filted.count(i) == count:
                     correct_id1.add(i)
-            vacs = session.query(Vacanci).filter(Vacanci.id.in_(list(correct_id1))).all()
+            vacancy_filted = session.query(Vacanci).filter(Vacanci.id.in_(list(correct_id1))).all()
         else:
-            vacs = session.query(Vacanci).all()
-        for vac in vacs:
-            answer["elements"].append(
+            vacancy_filted = session.query(Vacanci).all()
+        for vacancy in vacancy_filted:
+            db_filted["elements"].append(
                 {
-                    "profession": vac.profession,
-                    "salary": vac.salary,
-                    "experience": vac.experience,
-                    "schedule": vac.schedule,
-                    "skills": vac.skills,
-                    "address": vac.address,
-                    "rating": vac.rating,
-                    "company": vac.company,
-                    "link": vac.link
+                    "profession": vacancy.profession,
+                    "salary": vacancy.salary,
+                    "experience": vacancy.experience,
+                    "schedule": vacancy.schedule,
+                    "skills": vacancy.skills,
+                    "address": vacancy.address,
+                    "rating": vacancy.rating,
+                    "company": vacancy.company,
+                    "link": vacancy.link
 
                 }
             )
-            answer["city"].append(vac.address)
-    if len(answer["elements"])==0:
-        answer["error"]="error_of_filters"
-    return answer
+            db_filted["city"].append(vacancy.address)
+    if len(db_filted["elements"])==0:
+        db_filted["error"]="error_of_filters"
+    return db_filted
 
 
 
