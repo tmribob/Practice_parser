@@ -6,68 +6,85 @@
     <link href="{{ url_for('static', path='/vacancy.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div class="right_panel">
-        <div id="filters">
-            <form action="/move/Filters" method="post" id="req">
-                <select name="experience">
-                    <option value="">Не имеет значения</option>
-                    <option value="не требуется">Нет опыта </option>
-                    <option value="1–3 года">От 1 года до 3 лет</option>
-                    <option value="3–6 лет">От 3 до 6 лет</option>
-                    <option value="более 6 лет">Более 6 лет</option>
-                </select>
-                <div class="check">
-                    <input type="checkbox" name="schedule" value="полный день">Полный день<br>
-                    <input type="checkbox" name="schedule" value="удаленная работа">Удаленная работа<br>
-                    <input type="checkbox" name="schedule" value="гибкий график">Гибкий график<br>
-                    <input type="checkbox" name="schedule" value="сменный график">Сменный график<br>
-                    <input type="checkbox" name="schedule" value="вахтовый метод">Вахтовый метод<br>
-                </div>
-
-                <input type="text" name="adres" placeholder="Город">
-                <input type="submit">
-            </form>
-            <button onclick=open_filters() class="open"><svg class="filt" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 368.167 368.167" xml:space="preserve"><path d="M248.084 96.684h12c4.4 0 8-3.6 8-8s-3.6-8-8-8h-12c-4.4 0-8 3.6-8 8s3.6 8 8 8" style="fill:#b2b94a"/><path d="M366.484 25.484c-2.8-5.6-8.4-8.8-14.4-8.8h-336c-6 0-11.6 3.6-14.4 8.8-2.8 5.6-2 12 1.6 16.8l141.2 177.6v115.6c0 6 3.2 11.2 8.4 14 2.4 1.2 4.8 2 7.6 2 3.2 0 6.4-.8 9.2-2.8l44.4-30.8c6.4-4.8 10-12 10-19.6v-78.8l140.8-177.2c3.6-4.8 4.4-11.2 1.6-16.8m-156.8 186.4c-.8 1.2-1.6 2.8-1.6 4.8v81.2c0 2.8-1.2 5.2-3.2 6.8l-44.4 30.8v-118.8c0-2.8-1.2-5.2-3.2-6.4l-90.4-113.6h145.2c4.4 0 8-3.6 8-8s-3.6-8-8-8h-157.6l-38.4-48h336z" style="fill:#b2b94a"/></svg></button>
-        </div>
-    </div>
     <header>
         <span class="head">Найденные вакансии</span>
     </header>
-    <div class="list">
-        {% for vacancy in data %}
-            <div class="card">
-                <div class="dolsh"><a href="{{vacancy['link']}}">{{vacancy["dolsh"]}}</a></div>
-                <div class="gps">
-                    <div class="city">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g fill="#b2b84b"><path d="M9.707 4.793C9.414 4.5 8.943 4.5 8 4.5h-.25V3a.75.75 0 0 0-1.5 0v1.5H6c-.943 0-1.414 0-1.707.293S4 5.557 4 6.5v.204q.305-.078.606-.117C5.25 6.5 6.045 6.5 6.91 6.5h.179c.865 0 1.659 0 2.304.087q.302.038.606.117V6.5c0-.943 0-1.414-.293-1.707"/><path fill-rule="evenodd" clip-rule="evenodd" d="M2 21.25a.75.75 0 0 0 0 1.5h20a.75.75 0 0 0 0-1.5h-1V7.772c0-1.34 0-2.011-.356-2.525s-.984-.75-2.24-1.22c-2.455-.921-3.682-1.381-4.543-.785C13 3.84 13 5.15 13 7.772V10.5h.09c.865 0 1.659 0 2.304.087.711.095 1.463.32 2.08.938.619.618.844 1.37.94 2.08.086.646.086 1.44.086 2.306v5.339H17V16c0-1.886 0-2.828-.586-3.414S14.886 12 13 12h-2c-1.886 0-2.828 0-3.414.586S7 14.114 7 16v5.25H5.5v-5.34c0-.865 0-1.659.087-2.304.095-.711.32-1.463.938-2.08.618-.619 1.37-.844 2.08-.94.646-.086 1.44-.086 2.306-.086h.072c-.04-.936-.165-1.51-.569-1.914C9.828 8 8.886 8 7 8s-2.828 0-3.414.586S3 10.114 3 12v9.25zM9.25 15a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75m0 3a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75"/></g></svg>
-                        <span>{{vacancy["adres"]}}</span>
-                    </div>
-                    <div class="company">
-                        {% if vacancy["rating"] !="Не найдено" %}
-                            <span>{{vacancy["company"] + "  " + vacancy["rating"]}}
-                            <svg version="1.0" class="star" xmlns="http://www.w3.org/2000/svg" viewBox="-8.32 -8.32 80.64 80.64" xml:space="preserve" fill="#b2b84b" stroke="#b2b84b" stroke-width="2.048"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><path d="M62.799 23.737a3.94 3.94 0 0 0-3.139-2.642l-16.969-2.593-7.622-16.237a3.938 3.938 0 0 0-7.13 0l-7.623 16.238-16.969 2.593a3.937 3.937 0 0 0-2.222 6.642l12.392 12.707-2.935 17.977a3.94 3.94 0 0 0 5.797 4.082l15.126-8.365 15.126 8.365a3.94 3.94 0 0 0 5.796-4.082l-2.935-17.977 12.393-12.707a3.94 3.94 0 0 0 .914-4.001z"/></svg>
-                            </span>
-                        {% else %}
-                            <span>{{vacancy["company"]}}</span>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="extra">
-                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><path d="M1 1h12v12H1zm0 18h12v12H1zm18 0h12v12H19zm0-18h12v12H19z" style="fill:none;stroke:#cb9a4d;stroke-linecap:round;stroke-linejoin:round;stroke-width:3.2" data-name="67-menu"/></svg>
-                    Опыт: <span>{{vacancy["experience"]}}</span><br>
-                    График: <span>{{vacancy["schedule"]}}</span><br>
-                    Умение: <span>{{vacancy["skills"]}}</span>
-                </div>
-                <div class="money">
-                    <span>{{vacancy["salary"]}}</span>
-                </div>
-
-            </div>
-        {% endfor %}
-    </div>
     <div class="home">
         <a class="a_home" href="/"><svg class="back" fill="#b2b84b" xmlns="http://www.w3.org/2000/svg" viewBox="-128.01 -128.01 768.07 768.07" xml:space="preserve" stroke="#b2b84b" stroke-width="10.753" transform="scale(-1 1)"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><path d="M510.207 414.676c-2.32-23.264-6.805-47.255-14.019-71.608C461.49 226.023 355.26 143.933 234.667 138.804V53.362c0-19.006-22.979-28.524-36.418-15.085l-192 192c-8.331 8.331-8.331 21.839 0 30.17l192 192c13.439 13.439 36.418 3.921 36.418-15.085V327.656c48.213-4.823 103.873 7.119 157.335 48.352 29.572 22.808 56.566 53.666 80.333 93.599C483.421 488.234 512 480.372 512 458.696c.005-.959.005-.959.025-2.725.14-13.282-.24-25.468-1.818-41.295zm-92.148-72.454c-66.551-51.328-136.755-64.332-197.184-55.876-5.85.818-10.162 1.676-12.758 2.331A21.334 21.334 0 0 0 192 309.363v76.497L51.503 245.362 192 104.866v55.163c0 12.07 10.005 21.737 22.069 21.321.863-.03 1.551-.045 3.33-.076 108.78-2.351 206.919 69.472 237.882 173.917a342 342 0 0 1 7.124 28.488c-14.036-15.704-28.841-29.499-44.346-41.457z"/></svg></a>
     </div>
+    {% if error != "error_parsing"%}
+        <div class="right_panel">
+            <div id="filters">
+                <form action="/move/Filters" method="post" id="req">
+                    <select name="experience">
+                        <option value="">Не имеет значения</option>
+                        <option value="не требуется">Нет опыта </option>
+                        <option value="1–3 года">От 1 года до 3 лет</option>
+                        <option value="3–6 лет">От 3 до 6 лет</option>
+                        <option value="более 6 лет">Более 6 лет</option>
+                    </select>
+                    <div class="check">
+                        <input type="checkbox" name="schedule" value="полный день">Полный день<br>
+                        <input type="checkbox" name="schedule" value="удаленная работа">Удаленная работа<br>
+                        <input type="checkbox" name="schedule" value="гибкий график">Гибкий график<br>
+                        <input type="checkbox" name="schedule" value="сменный график">Сменный график<br>
+                        <input type="checkbox" name="schedule" value="вахтовый метод">Вахтовый метод<br>
+                    </div>
+
+                    <datalist id="citys">
+                        {% for vacancy in city %}
+                            <option value="{{vacancy}}"></option>
+                        {% endfor %}
+                    </datalist>
+                    <input list="citys" type="search" name="address" placeholder="Город">
+                    <input type="submit">
+                </form>
+                <button onclick=open_filters() class="open"><svg class="filt" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 368.167 368.167" xml:space="preserve"><path d="M248.084 96.684h12c4.4 0 8-3.6 8-8s-3.6-8-8-8h-12c-4.4 0-8 3.6-8 8s3.6 8 8 8" style="fill:#b2b94a"/><path d="M366.484 25.484c-2.8-5.6-8.4-8.8-14.4-8.8h-336c-6 0-11.6 3.6-14.4 8.8-2.8 5.6-2 12 1.6 16.8l141.2 177.6v115.6c0 6 3.2 11.2 8.4 14 2.4 1.2 4.8 2 7.6 2 3.2 0 6.4-.8 9.2-2.8l44.4-30.8c6.4-4.8 10-12 10-19.6v-78.8l140.8-177.2c3.6-4.8 4.4-11.2 1.6-16.8m-156.8 186.4c-.8 1.2-1.6 2.8-1.6 4.8v81.2c0 2.8-1.2 5.2-3.2 6.8l-44.4 30.8v-118.8c0-2.8-1.2-5.2-3.2-6.4l-90.4-113.6h145.2c4.4 0 8-3.6 8-8s-3.6-8-8-8h-157.6l-38.4-48h336z" style="fill:#b2b94a"/></svg></button>
+            </div>
+        </div>
+        {% if error != "error_of_filters"%}
+            <div class="list">
+                {% for vacancy in data %}
+                    <div class="card">
+                        <div class="dolsh"><a href="{{vacancy['link']}}">{{vacancy["profession"]}}</a></div>
+                        <div class="gps">
+                            <div class="city">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><g fill="#b2b84b"><path d="M9.707 4.793C9.414 4.5 8.943 4.5 8 4.5h-.25V3a.75.75 0 0 0-1.5 0v1.5H6c-.943 0-1.414 0-1.707.293S4 5.557 4 6.5v.204q.305-.078.606-.117C5.25 6.5 6.045 6.5 6.91 6.5h.179c.865 0 1.659 0 2.304.087q.302.038.606.117V6.5c0-.943 0-1.414-.293-1.707"/><path fill-rule="evenodd" clip-rule="evenodd" d="M2 21.25a.75.75 0 0 0 0 1.5h20a.75.75 0 0 0 0-1.5h-1V7.772c0-1.34 0-2.011-.356-2.525s-.984-.75-2.24-1.22c-2.455-.921-3.682-1.381-4.543-.785C13 3.84 13 5.15 13 7.772V10.5h.09c.865 0 1.659 0 2.304.087.711.095 1.463.32 2.08.938.619.618.844 1.37.94 2.08.086.646.086 1.44.086 2.306v5.339H17V16c0-1.886 0-2.828-.586-3.414S14.886 12 13 12h-2c-1.886 0-2.828 0-3.414.586S7 14.114 7 16v5.25H5.5v-5.34c0-.865 0-1.659.087-2.304.095-.711.32-1.463.938-2.08.618-.619 1.37-.844 2.08-.94.646-.086 1.44-.086 2.306-.086h.072c-.04-.936-.165-1.51-.569-1.914C9.828 8 8.886 8 7 8s-2.828 0-3.414.586S3 10.114 3 12v9.25zM9.25 15a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75m0 3a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75"/></g></svg>
+                                <span>{{vacancy["address"]}}</span>
+                            </div>
+                            <div class="company">
+                                {% if vacancy["rating"] !="Не найдено" %}
+                                    <span>{{vacancy["company"] + "  " + vacancy["rating"]}}
+                                    <svg version="1.0" class="star" xmlns="http://www.w3.org/2000/svg" viewBox="-8.32 -8.32 80.64 80.64" xml:space="preserve" fill="#b2b84b" stroke="#b2b84b" stroke-width="2.048"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><path d="M62.799 23.737a3.94 3.94 0 0 0-3.139-2.642l-16.969-2.593-7.622-16.237a3.938 3.938 0 0 0-7.13 0l-7.623 16.238-16.969 2.593a3.937 3.937 0 0 0-2.222 6.642l12.392 12.707-2.935 17.977a3.94 3.94 0 0 0 5.797 4.082l15.126-8.365 15.126 8.365a3.94 3.94 0 0 0 5.796-4.082l-2.935-17.977 12.393-12.707a3.94 3.94 0 0 0 .914-4.001z"/></svg>
+                                    </span>
+                                {% else %}
+                                    <span>{{vacancy["company"]}}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="extra">
+                            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><path d="M1 1h12v12H1zm0 18h12v12H1zm18 0h12v12H19zm0-18h12v12H19z" style="fill:none;stroke:#cb9a4d;stroke-linecap:round;stroke-linejoin:round;stroke-width:3.2" data-name="67-menu"/></svg>
+                            Опыт: <span>{{vacancy["experience"]}}</span><br>
+                            График: <span>{{vacancy["schedule"]}}</span><br>
+                            Умение: <span>{{vacancy["skills"]}}</span>
+                        </div>
+                        <div class="money">
+                            <span>{{vacancy["salary"]}}</span>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="error">
+                <label>По данным фильтрам не нашлось вакансии</label>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="error">
+            <label>По вашему запросу нечего не найденно</label>
+        </div>
+    {% endif %}
 <script>
     function open_filters(){
         let block_filters = document.getElementById("filters");

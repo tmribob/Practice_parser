@@ -22,28 +22,27 @@ def index(request: Request):
 @otv.post("/move/{path_variable}", response_class=HTMLResponse)
 def take(request: Request,
          path_variable: str,
-         text: str = Form(default=None),
+         search: str = Form(default=None),
          salary: str = Form(default=None),
-         adres: str = Form(default=None),
+         address: str = Form(default=None),
          experience: str = Form(default=None),
          schedule: str = Form(default=None)):
     global global_answer
     if path_variable == "parsing":
         params = {
-            "text": text,
+            "search": search,
             "salary": salary
         }
-        server_response = requests.get("http://127.0.0.1:7419/go", params=params)
+        server_response = requests.get("http://127.0.0.1:7419/begin", params=params)
         global_answer = server_response
 
     if path_variable == "Filters":
         params = {
-            "adres": adres ,
+            "address": address ,
             "experience": experience,
             "schedule": schedule
         }
         server_response = requests.get("http://127.0.0.1:7419/filtri_vacansi", params=params)
         global_answer = server_response
     data = global_answer.json()
-    print(adres, experience,schedule)
-    return templates.TemplateResponse("vacancy.html", {"request": request, "data":data["elements"], "error": data["error"]})
+    return templates.TemplateResponse("vacancy.html", {"request": request, "data":data["elements"], "error": data["error"],"city": set(data["city"])})

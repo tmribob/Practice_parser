@@ -130,7 +130,7 @@ svg {
     align-items: flex-end;
 }
 
-input[type="text"],select  {
+input[type="search"],select  {
     width: 98%;
     background: #94744b;
     height: 4vh;
@@ -187,4 +187,19 @@ a.a_home {
     width: 100%;
     display: block;
     height: 100%;
+}
+
+.error {
+    width: 40%;
+    background: #41251cc4;
+    height: 30vh;
+    margin: 25vh 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #b2b84b;
+    font-size: 70px;
+    text-align: center;
+    border-radius: 3vh;
+    font-weight: 600;
 }

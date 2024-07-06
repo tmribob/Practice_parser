@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import json
 import time
 import fake_useragent
 from fastapi import FastAPI
@@ -14,138 +13,137 @@ app = FastAPI()
 
 ua = fake_useragent.UserAgent()
 
-@app.get("/go")
-def go(text: str, salary: str = None):
-    answer = {"elements": [], "error": "not_error"}
+@app.get("/begin")
+def begin(search: str = None, salary: str = None):
+    vacancys = {"elements": [], "error": "not_error","city":[]}
     create_tables()
     try:
-        for b in link(text, salary):
-            resume(b)
+        for link in get_links(search, salary):
+            resume(link)
             time.sleep(3)
         with session_creation() as session:
-            all_values = session.query(Vacanci).all()
-            for alc in all_values:
-                answer["elements"].append(
+            vacancys_from_db = session.query(Vacanci).all()
+            for one_vacancy_from_db in vacancys_from_db:
+                vacancys["elements"].append(
                     {
-                        "dolsh": alc.dolsh,
-                        "salary": alc.salary,
-                        "experience": alc.experience,
-                        "schedule": alc.schedule,
-                        "skills": alc.skills,
-                        "adres": alc.adres,
-                        "rating": alc.rating,
-                        "company": alc.company,
-                        "link": alc.link
+                        "profession": one_vacancy_from_db.profession,
+                        "salary": one_vacancy_from_db.salary,
+                        "experience": one_vacancy_from_db.experience,
+                        "schedule": one_vacancy_from_db.schedule,
+                        "skills": one_vacancy_from_db.skills,
+                        "address": one_vacancy_from_db.address,
+                        "rating": one_vacancy_from_db.rating,
+                        "company": one_vacancy_from_db.company,
+                        "link": one_vacancy_from_db.link
 
                     }
+
                 )
+                vacancys["city"].append(one_vacancy_from_db.address)
+
     except:
-        answer["error"]="error_parsing"
-    return answer
+        vacancys["error"] = "error_parsing"
+    return vacancys
 
 
-def link(text: str, salary: str = None):
-    linkis=[]
+def get_links(search: str = None, salary: str = None):
+    if search == None: search = ""
+    links=[]
     data=requests.get(
-        url=f"https://hh.ru/search/vacancy?text={text}&salary={salary}",
+        url=f"https://hh.ru/search/vacancy?text={search}&salary={salary}",
         headers={"user-agent": ua.random}
     )
-    soup = BeautifulSoup(data.content,"lxml")
+    soup = BeautifulSoup(data.content ,"lxml")
     try:
-        page_max=int(soup.find("div",class_="pager").find_all("span", recursive=False)[-1].find("a").find("span").text)
+        page_max=int(soup.find("div" , class_="pager").find_all("span", recursive=False)[-1].find("a").find("span").text)
         #page_max=int(soup.find("div",class_="pager").find_all("span")[-3].text)
 
     except:return
-    for i in range(page_max):
+    for page in range(page_max):
         try:
             data = requests.get(
-                url=f"https://hh.ru/search/vacancy?text={text}&page={i}$salary={salary}",
+                url=f"https://hh.ru/search/vacancy?text={search}&page={page}$salary={salary}",
                 headers={"user-agent": ua.random}
             )
-            soup = BeautifulSoup(data.content, "lxml")
-            for b in [d.find("a") for d in soup.find_all("span", class_="serp-item__title-link-wrapper")]:
-                if "vacancy" in f"{b.attrs['href'].split('?')[0]}":
-                    linkis.append(f"{b.attrs['href'].split('?')[0]}")
-                if len(linkis)>=12:
-                    return linkis
+            soup = BeautifulSoup(data.content , "lxml")
+            for link_in_a in [d.find("a") for d in soup.find_all("span", class_="serp-item__title-link-wrapper")]:
+                if "vacancy" in f"{link_in_a.attrs['href'].split('?')[0]}":
+                    links.append(f"{link_in_a.attrs['href'].split('?')[0]}")
+                if len(links)>=12:
+                    return links
         except Exception as e:
             print(f"{e}")
             time.sleep(1)
     else:
-        return linkis
-def resume(text):
+        return links
+def resume(link):
     data = requests.get(
-        url=text,
+        url=link,
         headers={"user-agent": ua.random}
     )
     soup = BeautifulSoup(data.content, "lxml")
     with session_creation() as session:
-        vacancies = Vacanci()
+        vacancys = Vacanci()
         try:
-            name=soup.find("h1", class_="bloko-header-section-1").text
-            vacancies.dolsh = name
+            profession_from_parser=soup.find("h1", class_="bloko-header-section-1").text
+            vacancys.profession = profession_from_parser
         except:
             return
         try:
-            salary = soup.find(attrs={
+            salary_from_parser = soup.find(attrs={
                 'data-qa': 'vacancy-salary'}).find("span").text.replace(
                 "\xa0", '')
-            vacancies.salary = salary
-            time.sleep(1)
         except:
-            salary = "Уровень дохода не указан"
-            vacancies.salary = salary
+            salary_from_parser = "Уровень дохода не указан"
+        vacancys.salary = salary_from_parser
         try:
-            experience = soup.find(attrs={"data-qa": "vacancy-experience"}).text
-            vacancies.experience = experience
+            experience_from_parser = soup.find(attrs={"data-qa": "vacancy-experience"}).text
         except:
-            experience = "Error"
-            vacancies.experience = experience
+            experience_from_parser = "Не указан"
+        vacancys.experience = experience_from_parser
         try:
-            schedule = soup.find(attrs={"data-qa": "vacancy-view-employment-mode"}).text
-            vacancies.schedule = schedule
+            schedule_from_parser = soup.find(attrs={"data-qa": "vacancy-view-employment-mode"}).text
         except:
-            schedule = "Error"
-            vacancies.schedule = schedule
-        skills = [skill.find("div", recursive=False).find("div").text for skill in soup.find_all("li", attrs={"data-qa": "skills-element"})]
-        if not skills:
-            skills = "Error"
+            schedule_from_parser = "Не указан"
+        vacancys.schedule = schedule_from_parser
+        skills_from_parser = [skill.find("div", recursive=False).find("div").text for skill in soup.find_all("li", attrs={"data-qa": "skills-element"})]
+        if not skills_from_parser:
+            skills_from_parser = "Не указаны"
         else:
-            skills = ", ".join(skills)
-        vacancies.skills = skills
+            skills_from_parser = ", ".join(skills_from_parser)
+        vacancys.skills = skills_from_parser
         try:
-            region = soup.find(attrs={"data-qa": "vacancy-view-location"}).text
-            if region !="":
-                vacancies.adres = region
+            region_from_parser = soup.find(attrs={"data-qa": "vacancy-view-location"}).text
+            if region_from_parser !="":
+                vacancys.address = region_from_parser
         except:
-            adres = soup.find(attrs={"data-qa": "vacancy-view-raw-address"}).text.split(",")[0]
-            if adres !="":
-                vacancies.adres = adres
+            address_from_parser = soup.find(attrs={"data-qa": "vacancy-view-raw-address"}).text.split(",")[0]
+            if address_from_parser !="":
+                vacancys.address = address_from_parser
         try:
-            rating=soup.find(attrs={"data-qa": "employer-review-small-widget-total-rating"}).text
+            rating_from_parser=soup.find(attrs={"data-qa": "employer-review-small-widget-total-rating"}).text
         except:
-            rating="Не найдено"
-        vacancies.rating = rating
+            rating_from_parser="Не найдено"
+        vacancys.rating = rating_from_parser
         try:
-            company=soup.find(attrs={"data-qa": "bloko-header-2"}).text
+            company_from_parser=soup.find(attrs={"data-qa": "bloko-header-2"}).text
         except:
-            company="Не найдено"
-        vacancies.company = company
-
-        link=text
-        vacancies.link = link
-        session.add(vacancies)
+            company_from_parser="Не найдено"
+        vacancys.company = company_from_parser
+        vacancys.link = link
+        session.add(vacancys)
         session.commit()
 
 
 def for_filters(search: str, colum: str):
     with session_creation() as session:
-        if colum == "regadr":
-            value = session.query(Vacanci.id, Vacanci.adres).all()
-        elif colum == "experience":
-            value = session.query(Vacanci.id, Vacanci.experience).all()
-        elif colum == "schedule":
-            value = session.query(Vacanci.id, Vacanci.schedule).all()
+        mas={
+                "experience": Vacanci.experience,
+                "schedule": Vacanci.schedule,
+                "address": Vacanci.address,
+
+            }
+        value = session.query(Vacanci.id, mas[colum]).all()
         idi = []
         for i in value:
             if search in i[1]:
@@ -153,15 +151,14 @@ def for_filters(search: str, colum: str):
         return idi
 
 @app.get("/filtri_vacansi")
-def filters(adres: str = None, experience: str = None, schedule: str = None):
-    print(adres, experience, schedule)
+def filters(address: str = None, experience: str = None, schedule: str = None):
     correct_id = []
     correct_id1 = set()
-    answer = {"elements": [], "error": "not_error"}
+    answer = {"elements": [], "error": "not_error","city":[]}
     count = 0
     with session_creation() as session:
-        if adres:
-            norm_regadr_id = for_filters(adres, "regadr")
+        if address:
+            norm_regadr_id = for_filters(address, "address")
             correct_id += norm_regadr_id
             count += 1
         if experience:
@@ -177,39 +174,26 @@ def filters(adres: str = None, experience: str = None, schedule: str = None):
                 if correct_id.count(i) == count:
                     correct_id1.add(i)
             vacs = session.query(Vacanci).filter(Vacanci.id.in_(list(correct_id1))).all()
-            for vac in vacs:
-                answer["elements"].append(
-                    {
-                        "dolsh": vac.dolsh,
-                        "salary": vac.salary,
-                        "experience": vac.experience,
-                        "schedule": vac.schedule,
-                        "skills": vac.skills,
-                        "adres": vac.adres,
-                        "rating": vac.rating,
-                        "company": vac.company,
-                        "link": vac.link
-
-                    }
-                )
         else:
             vacs = session.query(Vacanci).all()
-            for vac in vacs:
-                answer["elements"].append(
-                    {
-                        "dolsh": vac.dolsh,
-                        "salary": vac.salary,
-                        "experience": vac.experience,
-                        "schedule": vac.schedule,
-                        "skills": vac.skills,
-                        "adres": vac.adres,
-                        "rating": vac.rating,
-                        "company": vac.company,
-                        "link": vac.link
+        for vac in vacs:
+            answer["elements"].append(
+                {
+                    "profession": vac.profession,
+                    "salary": vac.salary,
+                    "experience": vac.experience,
+                    "schedule": vac.schedule,
+                    "skills": vac.skills,
+                    "address": vac.address,
+                    "rating": vac.rating,
+                    "company": vac.company,
+                    "link": vac.link
 
-                    }
-                )
-    print(answer)
+                }
+            )
+            answer["city"].append(vac.address)
+    if len(answer["elements"])==0:
+        answer["error"]="error_of_filters"
     return answer
 
 
