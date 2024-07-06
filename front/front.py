@@ -33,7 +33,7 @@ def take(request: Request,
             "search": search,
             "salary": salary
         }
-        server_response = requests.get("http://127.0.0.1:7419/begin", params=params)
+        server_response = requests.get("http://back:7419/begin", params=params)
         global_answer = server_response
 
     if path_variable == "Filters":
@@ -42,7 +42,7 @@ def take(request: Request,
             "experience": experience,
             "schedule": schedule
         }
-        server_response = requests.get("http://127.0.0.1:7419/filtri_vacansi", params=params)
+        server_response = requests.get("http://back:7419/filtri_vacansi", params=params)
         global_answer = server_response
     data = global_answer.json()
     return templates.TemplateResponse("vacancy.html", {"request": request, "data":data["elements"], "error": data["error"],"city": set(data["city"])})

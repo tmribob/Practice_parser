@@ -1,8 +1,8 @@
-version: "3.9"
+version: "4.31.1"
 
 services:
   db:
-    image: postgres:latest #образ с докер хаба, нужен чтобы докер создал базу данных посгрес в контейнере
+    image: postgres:latest
     container_name: practice
     environment:
       POSTGRES_USER: postgres
@@ -12,3 +12,23 @@ services:
       - ./data:/data
     ports:
       - 5432:5432
+
+  back:
+    build:
+      context: backend/
+    container_name: back_app
+    env_file:
+      - .env
+    ports:
+      - 7419:7419
+    depends_on:
+      - db
+
+  front:
+    build:
+      context: front/
+    container_name: front_app
+    ports:
+      - 8000:8000
+    depends_on:
+      - back

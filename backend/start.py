@@ -3,9 +3,9 @@ from bs4 import BeautifulSoup
 import fake_useragent
 from fastapi import FastAPI
 
-from src.database import session_creation
-from src.models import Vacanci
-from src.creat import create_tables
+from database import session_creation
+from models import Vacanci
+from creat import create_tables
 
 app = FastAPI()
 
