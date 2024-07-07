@@ -67,7 +67,7 @@ def get_links(search: str = None, salary: str = None):
             for link_in_a in [d.find("a") for d in soup.find_all("span", class_="serp-item__title-link-wrapper")]:
                 if "vacancy" in f"{link_in_a.attrs['href'].split('?')[0]}":
                     links.append(f"{link_in_a.attrs['href'].split('?')[0]}")
-                if len(links)>=12:
+                if len(links)>=30:
                     return links
         except Exception as e:
             print(f"{e}")

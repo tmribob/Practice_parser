@@ -43,8 +43,18 @@
             </div>
         </div>
         {% if error != "error_of_filters"%}
+            {% if page != 0 %}
+                <form action="/move/left" method="post" class="left_page">
+                    <input id="lf" type="submit" value="<" >
+                </form>
+            {% endif %}
+            {% if page != max_page-1 %}
+                <form action="/move/right" method="post" class="right_page">
+                    <input id="rg" type="submit" value=">">
+                </form>
+            {% endif %}
             <div class="list">
-                {% for vacancy in data %}
+                {% for vacancy in data[page*6:(page+1)*6] %}
                     <div class="card">
                         <div class="dolsh"><a href="{{vacancy['link']}}">{{vacancy["profession"]}}</a></div>
                         <div class="gps">

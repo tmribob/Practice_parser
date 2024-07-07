@@ -1,3 +1,5 @@
+import time
+
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from starlette.requests import Request
@@ -6,6 +8,7 @@ import requests
 import os
 from fastapi.staticfiles import StaticFiles
 
+c=0
 
 otv = FastAPI()
 
@@ -27,7 +30,7 @@ def take(request: Request,
          address: str = Form(default=None),
          experience: str = Form(default=None),
          schedule: str = Form(default=None)):
-    global global_answer
+    global global_answer , c
     if path_variable == "parsing":
         params = {
             "search": search,
@@ -44,5 +47,13 @@ def take(request: Request,
         }
         server_response = requests.get("http://back:7419/filtri_vacansi", params=params)
         global_answer = server_response
+    time.sleep(1)
     data = global_answer.json()
-    return templates.TemplateResponse("vacancy.html", {"request": request, "data":data["elements"], "error": data["error"],"city": set(data["city"])})
+    page_max = len(data["elements"])//6+(len(data["elements"])%6+5)//6
+    if path_variable == "left":
+        if c>0:
+            c-=1
+    if path_variable == "right":
+        if c<page_max-1:
+            c+=1
+    return templates.TemplateResponse("vacancy.html", {"request": request, "data":data["elements"], "error": data["error"],"city": set(data["city"]), "page":c, "max_page":page_max})

@@ -203,3 +203,27 @@ a.a_home {
     border-radius: 3vh;
     font-weight: 600;
 }
+.left_page{
+    position:absolute;
+    left: 3vh;
+    bottom: 3vh;
+}
+.right_page{
+    position:absolute;
+    right: 3vh;
+    bottom: 3vh;
+}
+#lf{
+    width: 6vh;
+    height: 6vh;
+    border: 5px solid #41251c;
+    font-size: 50px;
+    font-weight: 700;
+}
+#rg{
+    width: 6vh;
+    height: 6vh;
+    border: 5px solid #41251c;
+    font-size: 50px;
+    font-weight: 700;
+}
