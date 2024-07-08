@@ -8,3 +8,7 @@ docker-compose up --build
 ```
 docker-compose up
 ```
+## Server
+```
+http://localhost:8000/
+```
